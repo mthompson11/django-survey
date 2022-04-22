@@ -1,148 +1,18 @@
 * {
-    font-family: 'Rubik', sans-serif;
+    box-sizing: border-box;
+    margin: 0;
 }
 
-nav {
-    background-color: #2f6c68;
-}
+.navbar-brand {
+    font-family: 'Monoton', cursive;
+    font-size: 30px;
+}   
 
-.container {
-    width: 100%;
-}
-
-.featured-survey {
-    background-image: url("https://i.imgur.com/s4WF1Vu.jpg") !important;
-    color: white;
-    font-weight: bolder;
-    background-size: cover;
-    height: 90vh;
-    width: 100%;
-}
-
-#logo {
+#offcanvasNavbarLabel {
     font-family: 'Monoton', cursive;
     font-size: 30px;
 }
 
-body {
-    display: flex;
-    min-height: 100vh;
-    flex-direction: column;
-}
-
-main {
-    flex: 1 0 auto;
-}
-
-
-footer.page-footer {
-    padding-top: 0;
-    text-align: right;
-    background-color: #2f6c68;
-}
-
-
-.surveycard {
-    display: flex;
-    align-items: center;
-    height: 200px;
-    width: 500px;
-}
-
-.col,
-.card {
-    width: 100%;
-    display: inline-block;
-}
-
-.col {
-    width: 50vw !important;
-    /* width: 100% !important; */
-}
-
-
-.question-cards {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-}
-
-.taken:hover {
-    text-decoration: none;
-}
-
-#detail_heading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
-
-#question_form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-#form_in_question_form {
-    width: 80%;
-}
-
-#question_done {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-}
-
-.question_add_btn {
-    margin: 20px;
-}
-
-#surveycreateform {
-    text-align: center;
-}
-
-.surveyname {
-    text-align: center;
-}
-
-#questiontext {
-    padding-top: 1em;
-    padding-left: 2em;
-}
-
-.questiontext {
-    font-size: large;
-    color: black;
-}
-
-#description {
-    margin-bottom: 5px;
-}
-
-.page-title {
-    text-align: center !important;
-}
-
-.card-height {
-    height: 200px !important;
-}
-
-.btn-standard {
-    margin: 8px;
-}
-
-.page-title {
-    text-align: center;
-}
-
-.dashtitle {
-    text-align: center;
-}
-
-.votecount {
-    text-align: right;
-    padding-right: 20em;
+nav {
+    background-color: none;
 }

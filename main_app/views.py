@@ -6,6 +6,9 @@ from django.views.generic.edit import CreateView, DeleteView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+def home(request):
+  return render(request,'home.html')
+
 def signup(request):
   error_message = ''
   if request.method == 'POST':
@@ -24,9 +27,6 @@ def signup(request):
   form = UserCreationForm()
   context = {'form': form, 'error_message': error_message}
   return render(request, 'registration/signup.html', context)
-
-def home(request):
-  return redirect('login')
 
 @login_required
 def surveys_index(request):
