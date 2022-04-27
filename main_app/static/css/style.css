@@ -136,17 +136,6 @@ body {
     color: white;
 }
 
-@media only screen and (min-width:600px){
-    #featured-container {
-        max-height: 750px;
-    }
-    
-    #featured-container img {
-        width: 100%;
-        height: auto;
-    }
-  }
-
 #login-container {
     width: 100%;
     height: 100vh;
@@ -165,6 +154,33 @@ body {
 #login-form > div {
     width: 100%;
 }
+
+#signup-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#signup-container > form > div {
+    display: flex;
+    justify-content: center;
+}
+
+@media only screen and (min-width:600px){
+    #featured-container {
+        max-height: 750px;
+    }
+    
+    #featured-container img {
+        width: 100%;
+        height: auto;
+    }
+  }
 
 @media only screen and (max-width:992px){
     .navbar-dark .navbar-nav .nav-link {
