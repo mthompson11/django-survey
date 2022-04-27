@@ -1,10 +1,17 @@
 from django.urls import path
 from . import views
+from main_app.forms import CustomAuthenticationForm
+from django.contrib.auth import views as django_views
 
 urlpatterns = [
     path('', views.home, name='home'),
-    path('surveys/<int:survey_id>/', views.survey_detail, name='detail'),
+    path('accounts/login/', django_views.LoginView.as_view(
+            template_name="registration/login.html",
+            authentication_form=CustomAuthenticationForm
+            ),
+        name='login'),
     path('accounts/signup/', views.signup, name='signup'),
+    path('surveys/<int:survey_id>/', views.survey_detail, name='detail'),
     path('surveys/', views.surveys_index, name='index'),
     path('surveys/create', views.surveys_create.as_view(), name='create'),
     path('survey/<int:survey_id>/questions/create', views.questions_create.as_view(), name='question_create'),
