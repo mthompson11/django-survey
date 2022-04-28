@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
-from.models import Survey
+from.models import Question, Survey
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -20,12 +20,23 @@ class CustomAuthenticationForm(AuthenticationForm):
         self.fields['username'].widget.attrs.update({'class': 'form-control'})
         self.fields['password'].widget.attrs.update({'class': 'form-control'})
 
-class CreateForm(forms.ModelForm):
+class QuestionCreateForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(QuestionCreateForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+
+    class Meta:
+        model = Question
+        fields = ['question_text', 'option_one', 'option_two', 'option_three']
+
+class SurveyCreateForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(SurveyCreateForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+
     class Meta:
         model = Survey
         fields = ['name', 'description']
-        widgets = {
-            'name' : forms.TextInput(attrs={'class': 'form-control'}),
-            'description' : forms.TextInput(attrs={'class': 'form-control'})
-        }
 

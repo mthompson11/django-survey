@@ -1,33 +1,26 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1 class="page-title">All Surveys</h1>
+<div id="explore-container">
+    <h1>All Surveys</h1>
 
-<div class="question-cards">
-  {% for survey in surveys %}
-    {% if survey.hasQuestions == True %}
-        <div class="row surveycard" >
-            <div class="col s12 m7">
-                <div class="card card-height horizontal blue-grey darken-1">
-                <div class="card-stacked">
-                    <div class="card-content white-text">
-                        <span class="card-title">{{ survey.name }}</span>
-                        <p>{{ survey.description }}</p>
-                    </div>
-                    <div class="card-action">
-                        <a href="{% url 'detail' survey.id %}">View Details</a>
+    <div id="explore-card-container">
+        {% for survey in surveys %}
+            {% if survey.hasQuestions == True %}
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ survey.name }}</h5>
+                        <p class="card-text">{{ survey.description }}</p>
+                        <a href="{% url 'detail' survey.id %}" class="card-link">View Details</a>
                         {% if survey.taken %}
-                        <a class="grey-text" href="#">Taken</a>
+                            <a href="#" class="card-link">Taken</a>
                         {% else %}
-                            <a href="{% url 'survey_answer' survey.id %}">Take Survey</a>
+                            <a href="{% url 'survey_answer' survey.id %}" class="card-link">Take Survey</a>
                         {% endif %}
                     </div>
                 </div>
-                </div>
-            </div>
-        </div>
-        
-    {% endif %}
-  {% endfor %}
+            {% endif %}
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

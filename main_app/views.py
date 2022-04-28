@@ -4,7 +4,7 @@ from .models import Survey, Question
 from django.views.generic.edit import CreateView, DeleteView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import CustomUserCreationForm, CreateForm
+from .forms import CustomUserCreationForm, SurveyCreateForm, QuestionCreateForm
 
 def home(request):
   return render(request,'home.html')
@@ -52,7 +52,8 @@ def surveys_index(request):
 
 class surveys_create(LoginRequiredMixin, CreateView):
   model = Survey
-  fields = ['name', 'description']
+  form_class = SurveyCreateForm
+  
 
   def form_valid(self, form):
     form.instance.owner = self.request.user
@@ -61,7 +62,7 @@ class surveys_create(LoginRequiredMixin, CreateView):
 
 class questions_create(LoginRequiredMixin, CreateView):
   model = Question
-  fields = ['question_text', 'option_one', 'option_two', 'option_three']
+  form_class = QuestionCreateForm
 
   def form_valid(self, form):
     print(self.kwargs['survey_id'])
