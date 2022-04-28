@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div id="create-survey-container">
+    <h3>Create A New Survey</h3>
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div>
+            <input type="submit" value="Create Survey" class="btn btn-primary">
+        </div>  
+    </form>
+</div>
+
+{% endblock %}

@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
+from.models import Survey
+
 
 class CustomUserCreationForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
@@ -17,3 +19,13 @@ class CustomAuthenticationForm(AuthenticationForm):
 
         self.fields['username'].widget.attrs.update({'class': 'form-control'})
         self.fields['password'].widget.attrs.update({'class': 'form-control'})
+
+class CreateForm(forms.ModelForm):
+    class Meta:
+        model = Survey
+        fields = ['name', 'description']
+        widgets = {
+            'name' : forms.TextInput(attrs={'class': 'form-control'}),
+            'description' : forms.TextInput(attrs={'class': 'form-control'})
+        }
+
