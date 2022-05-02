@@ -5,6 +5,9 @@ from django.views.generic.edit import CreateView, DeleteView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import CustomUserCreationForm, SurveyCreateForm, QuestionCreateForm
+import boto3
+import os
+import uuid
 
 def home(request):
   return render(request,'home.html')
@@ -27,15 +30,29 @@ def signup(request):
 def create_survey(request):
   error_message = ''
   if request.method == 'POST':
-    form = CreateForm(request.POST)
-    form.instance.owner = request.user
-    if form.is_valid():
-      survey = form.save()
-      return redirect('question_create', survey_id=survey.id)
-    else:
-      error_message = 'Invalid sign up - try again'
-  form = CreateForm()
-  context = {'form': form, 'error_message': error_message}
+    photo_file = request.FILES.get('photo-file', None)
+    s3 = boto3.client('s3')
+    key = uuid.uuid4().hex[:6] + photo_file.name[photo_file.name.rfind('.'):]
+    try:
+        bucket = os.environ['S3_BUCKET']
+        s3.upload_fileobj(photo_file, bucket, key)
+        url = f"{os.environ['S3_BASE_URL']}{bucket}/{key}"
+        data = {
+          'name': request.POST['name'],
+          'description': request.POST['description'],
+          'imageURL': url,
+          'owner': request.user,
+          'status' : 'D'
+        }
+        form = SurveyCreateForm(data)
+        if form.is_valid():
+          survey = form.save()
+          return redirect('question_create', survey_id=survey.id)
+        else:
+          error_message = 'Invalid survey - try again'
+    except Exception as e:
+      error_message = 'An error occurred uploading file to S3'
+  context = {'error_message': error_message}
   return render(request, 'surveys/create.html', context)
 
 @login_required
@@ -54,7 +71,6 @@ class surveys_create(LoginRequiredMixin, CreateView):
   model = Survey
   form_class = SurveyCreateForm
   
-
   def form_valid(self, form):
     form.instance.owner = self.request.user
     return super().form_valid(form)
@@ -121,6 +137,13 @@ def survey_answer(request, survey_id):
 def assoc_user(request, survey_id, user_id):
   Survey.objects.get(id=survey_id).users_taken.add(user_id)
   return redirect('index')
+
+@login_required
+def update_status(request, survey_id, status):
+  questions = Question.objects.filter(survey=survey_id)
+  if status == 'P' and len(questions) != 0:
+    Survey.objects.filter(id=survey_id).update(status=status)
+  return redirect('detail', survey_id=survey_id)
 
 
   

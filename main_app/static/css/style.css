@@ -183,6 +183,7 @@ body {
 #create-survey-container > form > div {
     display: flex;
     justify-content: center;
+    margin: 10px;
 }
 
 #questions-container {
@@ -209,8 +210,9 @@ body {
 }
 
 #explore-container {
+    position: absolute;
+    top: 100px;
     width: 100%;
-    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;

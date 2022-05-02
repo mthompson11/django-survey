@@ -19,7 +19,12 @@
     </table>
     <div>
       <input type="submit" value="Add Question" class="btn btn-primary">
-      <a class="btn btn-primary" href="{% url 'detail' survey.id %}">Done</a>
+      <a class="btn btn-primary" href="{% url 'detail' survey.id %}">Save As Draft</a>
+      {% if questions.count != 0 %}
+        <a class="btn btn-primary" href="{% url 'update_status' survey.id 'P' %}">Publish</a>
+      {% else %}
+        <a class="btn btn-secondary disabled" href="#">Publish</a>
+      {% endif %}
     </div>
   </form>
 </div>

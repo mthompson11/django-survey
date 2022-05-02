@@ -30,13 +30,20 @@ class QuestionCreateForm(forms.ModelForm):
         model = Question
         fields = ['question_text', 'option_one', 'option_two', 'option_three']
 
-class SurveyCreateForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(SurveyCreateForm, self).__init__(*args, **kwargs)
-        for visible in self.visible_fields():
-            visible.field.widget.attrs['class'] = 'form-control'
+# class SurveyCreateForm(forms.ModelForm):
+#     def __init__(self, *args, **kwargs):
+#         super(SurveyCreateForm, self).__init__(*args, **kwargs)
+#         for visible in self.visible_fields():
+#             visible.field.widget.attrs['class'] = 'form-control'
 
+#     class Meta:
+#         model = Survey
+#         fields = ['name', 'description', 'imageURL']
+#         field_classes = {
+#             'imageURL': forms.ImageField
+#         }
+
+class SurveyCreateForm(forms.ModelForm):
     class Meta:
         model = Survey
-        fields = ['name', 'description']
-
+        fields = ['name', 'description', 'imageURL', 'owner']

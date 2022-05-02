@@ -6,19 +6,22 @@
 
     <div id="explore-card-container">
         {% for survey in surveys %}
-            {% if survey.hasQuestions == True %}
-                <div class="card" style="width: 18rem;">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ survey.name }}</h5>
-                        <p class="card-text">{{ survey.description }}</p>
-                        <a href="{% url 'detail' survey.id %}" class="card-link">View Details</a>
-                        {% if survey.taken %}
-                            <a href="#" class="card-link">Taken</a>
-                        {% else %}
-                            <a href="{% url 'survey_answer' survey.id %}" class="card-link">Take Survey</a>
-                        {% endif %}
-                    </div>
+            {% if survey.status == 'P' %}
+            <div class="card" style="width: 18rem;">
+                <img src="{{ survey.imageURL }}" class="card-img-top">
+                <div class="card-body">
+                  <h5 class="card-title">{{ survey.name }}</h5>
+                  <p class="card-text">{{ survey.description }}</p>
                 </div>
+                <div class="card-body">
+                    <a href="{% url 'detail' survey.id %}" class="card-link btn btn-primary">View Details</a>
+                    {% if survey.taken %}
+                        <a href="#" class="card-link btn btn-secondary disabled">Taken</a>
+                    {% else %}
+                        <a href="{% url 'survey_answer' survey.id %}" class="card-link btn btn-primary">Take Survey</a>
+                    {% endif %}
+                </div>
+              </div>
             {% endif %}
         {% endfor %}
     </div>
