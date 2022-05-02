@@ -1,47 +1,39 @@
 {% extends 'base.html'%}
 {% block content %}
 
-<div id="detail_heading">
+<div id="detail-container">
+  <img src="{{ survey.imageURL }}"/>
   <h1>{{ survey.name }}</h1>
+  <p>{{ survey.description }}</p>
+  {% if taken or survey.status != 'P' %}
+    <a class="btn btn-secondary disabled" href="{% url 'survey_answer' survey.id %}">Take Survey</a>
+  {% else %}
+    <a class="btn btn-primary" href="{% url 'survey_answer' survey.id %}">Take Survey</a>
+  {% endif %}
 
-  <div>
-    <h3>{{ survey.description }}</h3>
+  {% for question in questions %}
+    <div class="vote-table primary-table">
+      <h3>{{ question.question_text}}</h3>
+      <table>
+        <thead>
 
-    {% if taken %}
-    <p>You've Already Taken This survey</p>
-    {% elif questions.count > 0 %}
-    <a class="btn" href="{% url 'survey_answer' survey.id %}">Take Survey</a>
-    {% endif %}
-  </div>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ question.option_one }}</td>
+            <td>{{ question.option_one_votes }}</td>
+          </tr>
+          <tr>
+            <td>{{ question.option_two }}</td>
+            <td>{{ question.option_two_votes }}</td>
+          </tr>
+          <tr>
+            <td>{{ question.option_three }}</td>
+            <td>{{ question.option_three_votes }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  {% endfor %}   
 </div>
-
-
-<div class="col s6">
-  <div class="highlight">
-    {% for question in questions %}
-    <h3>{{ question.question_text}}</h3>
-    <table>
-      <thead>
-        <th>Option</th>
-        <th class="votecount">Votes</th>
-      </thead>
-      <tbody>
-        <tr>
-          <td>{{ question.option_one }}</td>
-          <td class="votecount">{{ question.option_one_votes }}</td>
-        </tr>
-        <tr>
-          <td>{{ question.option_two }}</td>
-          <td class="votecount">{{ question.option_two_votes }}</td>
-        </tr>
-        <tr>
-          <td>{{ question.option_three }}</td>
-          <td class="votecount">{{ question.option_three_votes }}</td>
-        </tr>
-      </tbody>
-    </table>
-    {% endfor %}
-  </div>
-</div>
-
 {% endblock %}
