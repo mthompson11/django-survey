@@ -1,58 +1,88 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1 class="dashtitle">My Survey</h1>
-{% if surveys.count == 0 %}
-<h3>No surveys yet. Create a survey!</h3>
-{% else %}
-{% for survey in surveys %}
-{% if survey.hasQuestions == True %}
-<div class="row surveycard">
-    <div class="col s12 m7">
-        <div class="card card-height horizontal blue-grey darken-1">
-            <div class="card-stacked">
-                <div class="card-content white-text">
-                    <span class="card-title">{{ survey.name }}</span>
-                    <p>{{ survey.description }}</p>
-                </div>
-                <div class="card-action">
-                    <a href="{% url 'detail' survey.id %}">View Details</a>
-                    {% if survey.taken %}
-                    <a class="grey-text" href="#">Taken</a>
-                    {% else %}
-                    <a href="{% url 'question_create' survey.id %}">Question</a>
-                    <a href="{% url 'survey_answer' survey.id %}">Take Survey</a>
-                    {% endif %}
-                    <a href="{% url 'survey_delete' survey.id %}">Delete</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-{% endif %}
-{% endfor %}
-{% endif %}
-<h1 class="dashtitle">Unpublished</h1>
-{% for survey in surveys %}
-{% if survey.hasQuestions == False %}
-<div class="row surveycard">
-    <div class="col s12 m7">
-        <div class="card card-height horizontal blue-grey darken-1">
-            <div class="card-stacked">
-                <div class="card-content white-text">
-                    <span class="card-title">{{ survey.name }}</span>
-                    <p>{{ survey.description }}</p>
-                </div>
-                <div class="card-action">
-                    <a href="{% url 'detail' survey.id %}">View Details</a>
-                    <a href="{% url 'survey_delete' survey.id %}">Delete</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-{% endif %}
-{% endfor %}
 
+<div class="standard-container">
+    <h1>My Surveys</h1>
+    <h1>Published</h1>
+        {% if surveys.published.count == 0 %}
+            <h3>No Published Surveys</h3>
+        {% else %}
+            <table>
+                <tbody>
+            {% for survey in surveys.published %}
+                  <tr>
+                    <td>{{ survey.name }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary  btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            Options
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item" href="{% url 'detail' survey.id %}">View Details</a></li>
+                                <li><a class="dropdown-item" href="{% url 'update_status' survey.id 'C' %}">Close</a></li>
+                                <li><a class="dropdown-item" href="{% url 'survey_delete' survey.id %}">Delete</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                  </tr>   
+            {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    <h1>Drafts</h1>
+        {% if surveys.draft.count == 0 %}
+            <h3>No Draft Surveys</h3>
+        {% else %}
+            <table>
+                <tbody>
+            {% for survey in surveys.draft %}
+                <tr>
+                    <td>{{ survey.name }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary  btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            Options
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item" href="{% url 'detail' survey.id %}">View Details</a></li>
+                                <li><a class="dropdown-item" href="{% url 'edit' survey.id %}">Edit</a></li>
+                                <li><a class="dropdown-item" href="{% url 'update_status' survey.id 'P' %}">Publish</a></li>
+                                <li><a class="dropdown-item" href="{% url 'update_status' survey.id 'C' %}">Close</a></li>
+                                <li><a class="dropdown-item" href="{% url 'survey_delete' survey.id %}">Delete</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>  
+            {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    <h1>Closed</h1>
+        {% if surveys.closed.count == 0 %}
+            <h3>No Closed Surveys</h3>
+        {% else %}
+        <table>
+            <tbody>
+            {% for survey in surveys.closed %}
+                <tr>
+                    <td>{{ survey.name }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary  btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            Options
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item" href="{% url 'detail' survey.id %}">View Details</a></li>
+                                <li><a class="dropdown-item" href="{% url 'survey_delete' survey.id %}">Delete</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>  
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+</div>
 
 {% endblock %}

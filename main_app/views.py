@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from .models import Survey, Question
-from django.views.generic.edit import CreateView, DeleteView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import CustomUserCreationForm, SurveyCreateForm, QuestionCreateForm
+from .forms import CustomUserCreationForm, SurveyCreateForm, QuestionCreateForm, QuestionEditForm
 import boto3
 import os
 import uuid
@@ -103,14 +103,15 @@ def survey_detail(request, survey_id):
 def dashboard(request):
   surveys = Survey.objects.filter(owner=request.user.id)
   for survey in surveys:
-    if Question.objects.filter(survey=survey).exists():
-      survey.hasQuestions = True
-    else:
-      survey.hasQuestions = False
     if survey.users_taken.filter(id=request.user.id).exists():
       survey.taken = True
     else:
       survey.taken = False
+  surveys = {
+    'draft' : surveys.filter(status='D'),
+    'published' : surveys.filter(status='P'),
+    'closed' : surveys.filter(status='C')
+  }
   return render(request, 'dashboard.html', {'surveys' : surveys})
 
 class SurveyDelete(LoginRequiredMixin, DeleteView):
@@ -143,7 +144,19 @@ def update_status(request, survey_id, status):
   questions = Question.objects.filter(survey=survey_id)
   if status == 'P' and len(questions) != 0:
     Survey.objects.filter(id=survey_id).update(status=status)
+  elif status == 'C':
+    Survey.objects.filter(id=survey_id).update(status=status)
   return redirect('detail', survey_id=survey_id)
 
+@login_required
+def edit(request, survey_id):
+  survey = Survey.objects.get(id=survey_id)
+  questions = Question.objects.filter(survey=survey_id)
+  return render(request, 'edit.html', {'survey': survey, 'questions': questions})
+
+class question_edit(LoginRequiredMixin, UpdateView):
+  model = Question
+  template_name = 'question_edit.html'
+  form_class = QuestionEditForm
 
   

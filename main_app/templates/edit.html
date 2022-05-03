@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="standard-container">
+    <img src="{{ survey.imageURL }}"/>
+    <h1>{{ survey.name }}</h1>
+    <p>{{ survey.description }}</p>
+    <a class="btn btn-primary" href="#">Edit Survey</a>
+    <ul class="list-group list-group-flush">
+        {% for question in questions %}
+            <li class="list-group-item">{{ question.question_text }} <a class="btn btn-primary" href="{% url 'question_edit' question.id %}">Edit Question</a></li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}

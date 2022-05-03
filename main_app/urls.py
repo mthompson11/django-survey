@@ -13,12 +13,13 @@ urlpatterns = [
     path('surveys/<int:survey_id>/', views.survey_detail, name='detail'),
     path('surveys/', views.surveys_index, name='index'),
     path('surveys/create', views.create_survey, name='create'),
-    #path('surveys/create', views.surveys_create.as_view(), name='create'),
     path('survey/<int:survey_id>/questions/create', views.questions_create.as_view(), name='question_create'),
     path('dashboard/', views.dashboard, name= 'dashboard'),
     path('surveys/<int:pk>/delete/', views.SurveyDelete.as_view(), name='survey_delete'),
     path('survey/<int:survey_id>/vote/', views.survey_vote, name='survey_vote'),
     path('survey/<int:survey_id>/answer', views.survey_answer, name='survey_answer'),
     path('survey/<int:survey_id>/assoc_user/<int:user_id>/', views.assoc_user, name = 'assoc_user'),
-    path('survey/<int:survey_id>/update_status/<str:status>', views.update_status, name = 'update_status')
+    path('survey/<int:survey_id>/update_status/<str:status>', views.update_status, name = 'update_status'),
+    path('edit/<int:survey_id>', views.edit, name='edit'),
+    path('question/<int:pk>/edit/', views.question_edit.as_view(), name='question_edit'),
 ]

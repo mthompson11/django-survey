@@ -22,10 +22,25 @@
     box-shadow: none;
 }
 
-
 body {
     display: flex;
     flex-direction: column;
+}
+
+.standard-container {
+    position: absolute;
+    top: 100px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.standard-container > form > div {
+    display: flex;
+    justify-content: center;
+    margin: 10px;
 }
 
 #featured-container {
