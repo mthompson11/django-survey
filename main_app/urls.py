@@ -22,4 +22,5 @@ urlpatterns = [
     path('survey/<int:survey_id>/update_status/<str:status>', views.update_status, name = 'update_status'),
     path('edit/<int:survey_id>', views.edit, name='edit'),
     path('question/<int:pk>/edit/', views.question_edit.as_view(), name='question_edit'),
+    path('survey/<int:survey_id>/edit/', views.survey_edit, name='survey_edit'),
 ]

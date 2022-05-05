@@ -36,6 +36,6 @@ class Question(models.Model):
     def __str__(self):
         return self.question_text
     
-    def get_absolute_url(self):
-       return reverse('question_create', kwargs={'survey_id': self.survey.id})
+    # def get_absolute_url(self):
+    #    return reverse('question_create', kwargs={'survey_id': self.survey.id})
 

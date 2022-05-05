@@ -8,6 +8,7 @@ from .forms import CustomUserCreationForm, SurveyCreateForm, QuestionCreateForm,
 import boto3
 import os
 import uuid
+from django.urls import reverse
 
 def home(request):
   return render(request,'home.html')
@@ -91,6 +92,9 @@ class questions_create(LoginRequiredMixin, CreateView):
     context['questions'] = Question.objects.filter(survey=self.kwargs['survey_id'])
     return context
 
+  def get_success_url(self):
+    return reverse('question_create', kwargs={'survey_id': self.object.survey.id})
+
 @login_required
 def survey_detail(request, survey_id):
   survey = Survey.objects.get(id=survey_id)
@@ -158,5 +162,38 @@ class question_edit(LoginRequiredMixin, UpdateView):
   model = Question
   template_name = 'question_edit.html'
   form_class = QuestionEditForm
+
+  def get_success_url(self):
+    return reverse('edit', kwargs={'survey_id': self.object.survey.id})
+
+@login_required
+def survey_edit(request, survey_id):
+  error_message = ''
+  if request.method == 'POST':
+    photo_file = request.FILES.get('photo-file', None)
+    s3 = boto3.client('s3')
+    key = uuid.uuid4().hex[:6] + photo_file.name[photo_file.name.rfind('.'):]
+    try:
+        bucket = os.environ['S3_BUCKET']
+        s3.upload_fileobj(photo_file, bucket, key)
+        url = f"{os.environ['S3_BASE_URL']}{bucket}/{key}"
+        data = {
+          'name': request.POST['name'],
+          'description': request.POST['description'],
+          'imageURL': url,
+          'owner': request.user,
+          'status' : 'D'
+        }
+        form = SurveyCreateForm(data)
+        if form.is_valid():
+          survey = form.save()
+          return redirect('question_create', survey_id=survey.id)
+        else:
+          error_message = 'Invalid survey - try again'
+    except Exception as e:
+      error_message = 'An error occurred uploading file to S3'
+  survey = Survey.objects.get(id=survey_id)
+  context = {'error_message': error_message, 'survey' : survey}
+  return render(request, 'surveys/edit.html', context)
 
   
