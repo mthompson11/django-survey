@@ -4,7 +4,7 @@ from .models import Survey, Question
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import CustomUserCreationForm, SurveyCreateForm, QuestionCreateForm, QuestionEditForm
+from .forms import CustomUserCreationForm, SurveyCreateForm, SurveyEditForm, QuestionCreateForm, QuestionEditForm
 import boto3
 import os
 import uuid
@@ -166,34 +166,46 @@ class question_edit(LoginRequiredMixin, UpdateView):
   def get_success_url(self):
     return reverse('edit', kwargs={'survey_id': self.object.survey.id})
 
+def upload_to_s3(photo_file):
+  s3 = boto3.client('s3')
+  key = uuid.uuid4().hex[:6] + photo_file.name[photo_file.name.rfind('.'):]
+  bucket = os.environ['S3_BUCKET']
+  s3.upload_fileobj(photo_file, bucket, key)
+  url = f"{os.environ['S3_BASE_URL']}{bucket}/{key}"
+  return url
+
 @login_required
 def survey_edit(request, survey_id):
   error_message = ''
+  survey = Survey.objects.filter(id=survey_id)
   if request.method == 'POST':
     photo_file = request.FILES.get('photo-file', None)
-    s3 = boto3.client('s3')
-    key = uuid.uuid4().hex[:6] + photo_file.name[photo_file.name.rfind('.'):]
-    try:
-        bucket = os.environ['S3_BUCKET']
-        s3.upload_fileobj(photo_file, bucket, key)
-        url = f"{os.environ['S3_BASE_URL']}{bucket}/{key}"
-        data = {
-          'name': request.POST['name'],
-          'description': request.POST['description'],
-          'imageURL': url,
-          'owner': request.user,
-          'status' : 'D'
-        }
-        form = SurveyCreateForm(data)
-        if form.is_valid():
-          survey = form.save()
-          return redirect('question_create', survey_id=survey.id)
-        else:
-          error_message = 'Invalid survey - try again'
-    except Exception as e:
-      error_message = 'An error occurred uploading file to S3'
-  survey = Survey.objects.get(id=survey_id)
+    if photo_file:
+      try:
+        url = upload_to_s3(photo_file)
+      except Exception as e:
+        error_message = 'An error occurred uploading file to S3'
+    else:
+      url = survey[0].imageURL
+    data = {
+      'name': request.POST['name'],
+      'description': request.POST['description'],
+      'imageURL': url
+    }
+    form = SurveyEditForm(data)
+    if form.is_valid():
+      survey.update(name = data['name'], description = data['description'], 
+                    imageURL = data['imageURL'])
+      return redirect('edit', survey_id=survey[0].id)
+    else:
+      error_message = 'Invalid survey - try again'
   context = {'error_message': error_message, 'survey' : survey}
   return render(request, 'surveys/edit.html', context)
 
+
+class QuestionDelete(LoginRequiredMixin, DeleteView):
+  model = Question
+  
+  def get_success_url(self):
+    return reverse('edit', kwargs={'survey_id': self.object.survey.id})
   

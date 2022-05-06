@@ -35,6 +35,11 @@ class SurveyCreateForm(forms.ModelForm):
         model = Survey
         fields = ['name', 'description', 'imageURL', 'owner']
 
+class SurveyEditForm(forms.ModelForm):
+    class Meta:
+        model = Survey
+        fields = ['name', 'description', 'imageURL']
+
 class QuestionEditForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(QuestionEditForm, self).__init__(*args, **kwargs)

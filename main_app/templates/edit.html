@@ -8,7 +8,14 @@
     <a class="btn btn-primary" href="{% url 'survey_edit' survey.id %}">Edit Survey</a>
     <ul class="list-group list-group-flush">
         {% for question in questions %}
-            <li class="list-group-item">{{ question.question_text }} <a class="btn btn-primary" href="{% url 'question_edit' question.id %}">Edit Question</a></li>
+            <p>{{ question.question_text }}</p>
+            <button class="btn btn-secondary  btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                Options
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li><a class="dropdown-item" href="{% url 'question_edit' question.id %}">Edit Question</a></li>
+                <li><a class="dropdown-item" href="{% url 'question_delete' question.id %}">Delete Question</a></li>
+            </ul>
         {% endfor %}
     </ul>
     <a class="btn btn-primary" href="{% url 'question_create' survey.id %}">Add Questions</a>
